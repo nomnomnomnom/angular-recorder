@@ -216,7 +216,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
 
     //clear audio previously recorded
     control.audioModel = null;
-
     var id = control.id, recordHandler = service.getHandler();
     //Record initiation based on browser type
     var start = function () {
@@ -236,7 +235,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         if (!recordHandler) {
           return;
         }
-        console.log('HTML5Recording');
+        _.each(currentStream.getAudioTracks(), function(item){item.clone();})
         recordHandler.clear();
         recordHandler.record();
       }
@@ -261,7 +260,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
       }, 1000);
     };
 
-    if (service.isCordova || recordHandler) {
+    if (service.isCordova) {
       start();
     } else if (!status.isDenied) {
       //probably permission was never asked
@@ -273,6 +272,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         onAllowed: function () {
           status.isDenied = false;
           recordHandler = service.getHandler();
+          console.log(status, recordHandler);
           start();
           scopeApply();
         }
@@ -321,6 +321,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         recordHandler.exportWAV(function (blob) {
           completed(blob);
           scopeApply();
+            _.each(currentStream.getAudioTracks(), function(item){item.stop();});
         });
       });
     } else {
@@ -611,6 +612,7 @@ angular.module('angularAudioRecorder.directives')
     }
   ]);
 
+var currentStream=null;
 angular.module('angularAudioRecorder.services', ['angularAudioRecorder.config']);
 angular.module('angularAudioRecorder.services')
   .provider('recorderService', ['recorderScriptUrl',
@@ -785,8 +787,10 @@ angular.module('angularAudioRecorder.services')
         analyserNode: null
       };
 
+
       var html5HandlerConfig = {
         gotStream: function (stream) {
+          currentStream=stream;
           var audioContext = html5AudioProps.audioContext;
           // Create an AudioNode from the stream.
           html5AudioProps.audioInput = audioContext.createMediaStreamSource(stream);
@@ -893,7 +897,6 @@ angular.module('angularAudioRecorder.services')
           console.warn("Neither HTML5 nor SWF is supported.");
           return;
         }
-
         if (listeners) {
           angular.extend(permissionHandlers, listeners);
         }
