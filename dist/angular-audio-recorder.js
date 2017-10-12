@@ -1152,7 +1152,7 @@ angular.module('angularAudioRecorder.services')
     },
 
     isMicrophoneAccessible: function () {
-      return Recorder.recorder.isMicrophoneAccessible();
+      return Recorder && Recorder.recorder && Recorder.recorder.isMicrophoneAccessible();
     },
 
     updateForm: function () {

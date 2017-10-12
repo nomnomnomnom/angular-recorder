@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/logbon72/angular-recorder.git"
+    "url": "git+https://github.com/vlasovilya/angular-recorder.git"
   },
   "keywords": [
     "audio-recorder",
@@ -33,5 +33,5 @@
   "bugs": {
     "url": "https://github.com/logbon72/angular-recorder/issues"
   },
-  "homepage": "https://github.com/logbon72/angular-recorder#readme"
+  "homepage": "https://github.com/vlasovilya/angular-recorder#readme"
 }
